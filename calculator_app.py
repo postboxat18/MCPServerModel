@@ -5,7 +5,7 @@ from mcp.server.transport_security import TransportSecuritySettings
 mcp = FastMCP(
     "calculator_server",
     json_response=True,
-    host="0.0.0.0",
+    host="192.168.1.41",
     transport_security=TransportSecuritySettings(
         enable_dns_rebinding_protection=True,
         allowed_hosts=["mcpservermodel.onrender.com", "mcpservermodel.onrender.com:*"],
