@@ -8,8 +8,8 @@ mcp = FastMCP(
     host="0.0.0.0",
     transport_security=TransportSecuritySettings(
         enable_dns_rebinding_protection=True,
-        allowed_hosts=["mcpserver-fzg9.onrender.com", "mcpserver-fzg9.onrender.com:*"],
-        allowed_origins=["https://mcpserver-fzg9.onrender.com"],
+        allowed_hosts=["mcpservermodel.onrender.com", "mcpservermodel.onrender.com:*"],
+        allowed_origins=["https://mcpservermodel.onrender.com"],
     ),
 )
 
