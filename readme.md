@@ -1,388 +1,238 @@
-# 🚀 AI Orchestration Platform using MCP Server
+# 🚀 Intelligent AI Orchestration with MCP Server
 
-An intelligent AI orchestration platform built with **MCP (Model Context Protocol) Server** that dynamically routes user requests to the most appropriate AI service based on:
+A high-performance AI orchestration system built using an **MCP (Model Context Protocol) Server** that intelligently routes user requests to the most suitable AI service based on the query type, data sensitivity, and available GPU resources.
 
-- 🔒 Data confidentiality
-- ⚡ Performance requirements
-- 🎮 GPU availability
-- 📄 Document processing
-- 📚 Knowledge retrieval
-
-The system is optimized for an **NVIDIA GTX 1650 GPU**, balancing local AI inference, document retrieval, OCR processing, and cloud-based AI services to provide fast, secure, and accurate responses.
+The goal is to provide the **best performance**, **high accuracy**, and **low response time** while keeping confidential data secure.
 
 ---
 
 # ✨ Features
 
-- 🧠 Intelligent request routing using MCP Server
-- 🔒 Local LLM inference for confidential data
-- ⚡ Ultra-fast public AI responses using Groq
-- 📚 RAG with pretrained ColBERT retrieval
-- 📄 Intelligent OCR engine selection
-- 🎮 GPU-aware resource management
-- 🔄 Automatic service fallback
-- 🚀 Optimized for GTX 1650 (4GB VRAM)
+* 🧠 Intelligent function routing using MCP Server
+* 🔒 Local LLM inference for confidential data
+* ⚡ Groq API for ultra-fast public AI responses
+* 📄 Multiple OCR engines with automatic fallback
+* 📚 RAG (Retrieval-Augmented Generation) support
+* 🎮 GPU-aware workload management
+* 🚀 Optimized for NVIDIA GTX 1650
 
 ---
 
-# 🏗️ System Architecture
+# 🏗️ Architecture
 
 ```text
-                           User Query
-                                │
-                                ▼
-                     MCP Server (Router)
-                                │
-      ┌─────────────────────────┼─────────────────────────┐
-      │                         │                         │
-      ▼                         ▼                         ▼
- Confidential Query        General AI Query        Image / PDF
-      │                         │                         │
-      ▼                         ▼                         ▼
- Local Ollama               Groq API              OCR Router
-      │                                                 │
-      │                                          GPU Available?
-      │                                         ┌──────┴──────┐
-      │                                         │             │
-      │                                        Yes            No
-      │                                         │             │
-      │                               EasyOCR / PaddleOCR  Tesseract
-      │                                         │
-      └──────────────────────────────┬──────────┘
-                                     ▼
-                             Extracted Text
-                                     │
-                                     ▼
-                           ColBERT RAG Pipeline
-                                     │
-                  ┌──────────────────┴──────────────────┐
-                  │                                     │
-          Embedding & Indexing                 Semantic Retrieval
-                  │                                     │
-                  └──────────────────┬──────────────────┘
-                                     ▼
-                              Ollama / Groq
-                                     │
-                                     ▼
-                              Final Response
+                   User Query
+                        │
+                        ▼
+                 MCP Server Router
+                        │
+        ┌───────────────┼────────────────┐
+        │               │                │
+        ▼               ▼                ▼
+   Confidential      General AI      OCR Request
+      Query             Query
+        │               │                │
+        ▼               ▼                ▼
+     Ollama           Groq API      OCR Router
+(Local LLM)                             │
+                                        ▼
+                       GPU Available?
+                          │
+               ┌──────────┴──────────┐
+               │                     │
+              Yes                    No
+               │                     │
+        EasyOCR / PaddleOCR      Tesseract OCR
+               │                     │
+               └──────────┬──────────┘
+                          ▼
+                   Extracted Text
+                          │
+                          ▼
+                     RAG Pipeline
+                          │
+                          ▼
+                     Final Response
 ```
 
 ---
 
-# 🧠 MCP Server Function Routing
+# 🧩 AI Services
 
-The MCP Server intelligently assigns functions based on the user's request.
-
-| Request Type | Assigned Function |
-|--------------|------------------|
-| Confidential data | Ollama |
-| General AI questions | Groq |
-| OCR request | OCR Router |
-| Document Question Answering | ColBERT RAG |
-| Internal Knowledge Search | ColBERT RAG |
-| Image Text Extraction | EasyOCR / PaddleOCR / Tesseract |
-
----
-
-# 🤖 Ollama (Local AI)
+## 🤖 Ollama (Local LLM)
 
 Used for:
 
-- Confidential company documents
-- Internal business information
-- Private knowledge bases
-- Offline inference
-- Sensitive AI workloads
+* Confidential documents
+* Internal company data
+* Offline inference
+* Secure AI processing
 
-## Why Local?
+### Why?
 
-Sensitive information should never leave the local environment.
-
-Running Ollama locally ensures:
-
-- Data privacy
-- No cloud dependency
-- Secure inference
-- Low-latency responses
+Sensitive information should never leave the local machine. Ollama runs locally using the available GPU (GTX 1650), ensuring data privacy and security.
 
 ---
 
-# ⚡ Groq API
+## ⚡ Groq API
 
 Used for:
 
-- Public knowledge
-- General AI questions
-- Coding assistance
-- Summarization
-- Non-confidential requests
+* General knowledge questions
+* Public information
+* Fast AI responses
+* Non-confidential tasks
 
-## Benefits
+### Why?
 
-- Extremely fast inference
-- Reduces local GPU usage
-- Handles public AI workloads efficiently
-- Improves overall response time
+Groq provides extremely fast inference, making it ideal for everyday AI queries while reducing the workload on the local GPU.
 
 ---
 
-# 📚 Retrieval-Augmented Generation (RAG)
+# 📄 OCR Engine Selection
 
-The platform uses **pretrained ColBERT** for semantic document retrieval.
-
-Unlike traditional embedding-only retrieval, ColBERT performs **late interaction retrieval**, delivering higher search accuracy while maintaining excellent retrieval speed.
-
----
-
-## RAG Workflow
-
-```text
-User Question
-      │
-      ▼
-Document Collection
-      │
-      ▼
-Chunking
-      │
-      ▼
-ColBERT Indexing
-      │
-      ▼
-Semantic Search
-      │
-      ▼
-Relevant Chunks
-      │
-      ▼
-LLM (Ollama / Groq)
-      │
-      ▼
-Answer
-```
-
----
-
-# 🚀 Why ColBERT?
-
-The project uses a pretrained ColBERT model because it provides:
-
-- Better semantic retrieval
-- Higher search accuracy
-- Context-aware ranking
-- Reduced hallucinations
-- Fast document search
-
----
-
-# 🎮 GPU Usage for ColBERT
-
-ColBERT uses the GPU for:
-
-- Document indexing
-- Embedding generation
-- Semantic retrieval
-- Similarity computation
-
-Since ColBERT also consumes GPU memory, GPU resources are shared intelligently with other AI services.
-
-The MCP Server manages these workloads to avoid GPU bottlenecks.
-
----
-
-# 🎮 GPU Resource Management
-
-The platform is optimized for an NVIDIA GTX 1650 (4 GB VRAM).
-
-Since multiple services may require GPU acceleration, the MCP Server prioritizes workloads dynamically.
-
-## GPU Consumers
-
-| Service | GPU Usage |
-|----------|-----------|
-| Ollama | High |
-| ColBERT Retrieval | Medium |
-| EasyOCR | Medium |
-| PaddleOCR | Medium |
-| Groq | None (Cloud) |
-| Tesseract | CPU Only |
-
----
-
-## GPU Priority
-
-Priority order:
-
-1. Ollama
-2. ColBERT Retrieval
-3. EasyOCR
-4. PaddleOCR
-5. Tesseract (CPU)
-6. Groq (Cloud)
-
-This scheduling minimizes GPU contention while maintaining responsive performance.
-
----
-
-# 📄 Intelligent OCR Pipeline
-
-The OCR engine is selected automatically depending on GPU availability.
+The system automatically selects the best OCR engine depending on GPU availability and current workload.
 
 ## High Performance Mode
 
-When GPU resources are available:
+When the GPU is available:
 
-- EasyOCR
-- PaddleOCR
+* EasyOCR
+* PaddleOCR
 
 Advantages:
 
-- High accuracy
-- Better multilingual support
-- Faster extraction
-- Handles scanned documents effectively
+* Higher accuracy
+* Better multilingual support
+* Faster processing
+* Better handling of scanned documents
 
 ---
 
 ## Lightweight Mode
 
-When Ollama or ColBERT is actively using the GPU:
+When GPU-intensive services (such as Ollama) are already running:
 
-- Tesseract OCR
+* Tesseract OCR
 
 Advantages:
 
-- CPU-based
-- Lightweight
-- Fast startup
-- Prevents long response delays
-
-This ensures users are not waiting unnecessarily while GPU-intensive services are running.
+* CPU-based
+* Lightweight
+* Quick text extraction
+* Prevents users from waiting too long for responses
 
 ---
 
-# 🔄 Dynamic AI Routing
+# 📚 Retrieval-Augmented Generation (RAG)
 
-```text
-User Query
-      │
-      ▼
-Is Confidential?
-      │
- ┌────┴────┐
- │         │
-Yes        No
- │         │
- ▼         ▼
-Ollama   Groq
- │
- ▼
-Need Documents?
- │
- ▼
-ColBERT Retrieval
- │
- ▼
-Generate Response
-```
+The RAG pipeline enables the AI to answer questions from custom documents.
+
+Workflow:
+
+1. Document upload
+2. OCR (if required)
+3. Text chunking
+4. Embedding generation
+5. Vector database indexing
+6. Semantic retrieval
+7. LLM response generation
+
+Benefits:
+
+* Accurate responses
+* Reduced hallucinations
+* Document-aware answers
+* Supports enterprise knowledge bases
+
+---
+
+# 🧠 Intelligent Routing Logic
+
+| User Query                 | Selected Service    |
+| -------------------------- | ------------------- |
+| Confidential/Internal Data | Ollama (Local)      |
+| General AI Question        | Groq API            |
+| Image or PDF               | OCR Pipeline        |
+| Document Q&A               | RAG                 |
+| OCR with GPU Available     | EasyOCR / PaddleOCR |
+| OCR during Heavy GPU Usage | Tesseract           |
+
+---
+
+# 🎮 GPU Optimization (GTX 1650)
+
+Since the project targets an NVIDIA GTX 1650 (4 GB VRAM), GPU resources are managed efficiently.
+
+Priority:
+
+1. Ollama (highest priority for confidential AI tasks)
+2. EasyOCR / PaddleOCR (when GPU is available)
+3. Tesseract OCR (fallback when GPU is busy)
+4. Groq API (cloud-based, no local GPU usage)
+
+This strategy ensures:
+
+* Lower response time
+* Better GPU utilization
+* Stable local inference
+* Improved user experience
 
 ---
 
 # 🔒 Privacy Strategy
 
-| Data Type | Processing |
-|-----------|------------|
-| Confidential Documents | Local Ollama |
-| Internal Knowledge Base | Local ColBERT RAG |
-| Public Questions | Groq API |
-| OCR Processing | Local |
-| Vector Search | Local |
+| Data Type          | Processing Method |
+| ------------------ | ----------------- |
+| Confidential       | Local Ollama      |
+| Internal Documents | Local RAG         |
+| Public Questions   | Groq API          |
+| OCR Documents      | Local Processing  |
 
-No confidential information is transmitted to external AI providers.
+No confidential data is sent to external AI services.
 
 ---
 
-# ⚙️ Performance Strategy
+# 📈 Performance Benefits
 
-The MCP Server continuously optimizes performance by:
-
-- Routing confidential data locally
-- Sending public requests to Groq
-- Using ColBERT for accurate retrieval
-- Monitoring GPU availability
-- Selecting the most suitable OCR engine
-- Preventing GPU overload
-- Reducing response latency
+* Intelligent AI routing
+* Reduced GPU bottlenecks
+* Faster OCR processing
+* Secure local inference
+* Lower cloud API usage
+* Optimized response latency
+* High accuracy through RAG retrieval
+* Automatic OCR engine selection
 
 ---
 
 # 🛠️ Technology Stack
 
-## AI Models
-
-- Ollama
-- Groq API
-
-## Retrieval
-
-- ColBERT (Pretrained)
-- RAG
-- Vector Index
-
-## OCR
-
-- EasyOCR
-- PaddleOCR
-- Tesseract OCR
-
-## Backend
-
-- Python
-- MCP Server
-
-## Hardware
-
-- NVIDIA GTX 1650 GPU
+* MCP Server
+* Ollama
+* Groq API
+* EasyOCR
+* PaddleOCR
+* Tesseract OCR
+* Python
+* RAG Pipeline
+* Vector Database (FAISS / ChromaDB)
+* Hugging Face Embeddings
 
 ---
 
-# 📈 Benefits
+# 🎯 Future Enhancements
 
-- Intelligent AI orchestration
-- Secure local inference
-- Accurate document retrieval
-- GPU-aware scheduling
-- Automatic OCR engine selection
-- Lower response latency
-- Better retrieval accuracy with ColBERT
-- Reduced hallucinations using RAG
-- Cloud and local AI integration
-- Efficient GPU utilization
+* Multi-model routing with confidence scoring
+* Dynamic GPU load balancing
+* Hybrid cloud/local inference
+* Streaming responses
+* Vision-Language Model (VLM) integration
+* Multi-agent workflow orchestration
+* Advanced caching for embeddings and responses
 
 ---
 
-# 🎯 Future Improvements
+# 📌 Summary
 
-- Dynamic GPU memory monitoring
-- Multi-agent orchestration
-- Hybrid retrieval (ColBERT + Dense Embeddings)
-- Streaming AI responses
-- Vision Language Models (VLM)
-- Automatic model selection based on confidence
-- Distributed inference support
-
----
-
-# 📌 Conclusion
-
-This project demonstrates an intelligent **AI orchestration platform** powered by an **MCP Server**, designed to optimize performance, security, and user experience.
-
-By combining:
-
-- 🔒 **Ollama** for confidential local inference
-- ⚡ **Groq** for ultra-fast public AI responses
-- 📚 **Pretrained ColBERT** for high-accuracy Retrieval-Augmented Generation (RAG)
-- 📄 **EasyOCR**, **PaddleOCR**, and **Tesseract** for adaptive OCR processing
-- 🎮 **GPU-aware scheduling** tailored for an NVIDIA GTX 1650
-
-the platform delivers secure, scalable, and efficient AI workflows. The MCP Server intelligently routes every request based on data sensitivity, query type, and available computing resources, ensuring users receive accurate answers with minimal latency while protecting confidential information.
+This project combines **MCP Server**, **Ollama**, **Groq**, **RAG**, and multiple **OCR engines** to build a smart AI orchestration platform. By dynamically selecting the appropriate model or OCR engine based on query type, confidentiality, and GPU availability, it delivers secure, fast, and accurate responses while maximizing the performance of an NVIDIA GTX 1650 system.
